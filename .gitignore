@@ -1,0 +1,6 @@
+# Ignorar apenas o ambiente virtual gerado pelo venv
+Include/
+Lib/
+Scripts/
+*.pyc
+__pycache__/
