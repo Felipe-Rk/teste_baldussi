@@ -1,10 +1,12 @@
 from unittest.mock import Base
 from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
 from ..mysql.mysql import get_mysql_connection
 from mysql.connector import errorcode
 
 from database.mysql import mysql
 
+Base = declarative_base()
 
 def setup_mysql_database():
     db_name = "user_db"
@@ -24,9 +26,6 @@ def setup_mysql_database():
 
         connection.database = db_name
 
-
-
-
         # Verifica se a tabela `users` existe
         cursor.execute("SHOW TABLES LIKE 'users';")
         table_exists = cursor.fetchone()
@@ -34,10 +33,11 @@ def setup_mysql_database():
         if not table_exists:
             print("Tabela 'users' não encontrada. Criando...")
 
-            # Usa o SQLAlchemy para criar a tabela com base no modelo `User`
             engine = create_engine(f'mysql+mysqlconnector://root:root@localhost:3306/{db_name}')
+            from src.user.user_entity import User
             Base.metadata.create_all(engine)
             print("Tabela 'users' criada com sucesso.")
+            
         else:
             print("Tabela 'users' encontrada.")
 

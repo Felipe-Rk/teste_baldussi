@@ -17,10 +17,10 @@ def auth_user(email, password):
 def register_user(user_data):
     conect = setup_mysql_database()
     cursor = conect.cursor()
-    hashed_password = generate_password_hash(user_data['senha'], method = 'sha256')
+    hashed_password = generate_password_hash(user_data['senha'], method = 'pbkdf2:sha256')
     role = user_data.get('role', 'user')
     cursor.execute(
-        "INSERT INTO users (cpf, nome, email, senha, role) VALUES (%s, %s, %s, %s, %s,)",
+        "INSERT INTO users (cpf, nome, email, senha, role) VALUES (%s, %s, %s, %s, %s)",
         (user_data['cpf'], user_data['nome'], user_data['email'], hashed_password, role)
     )
     conect.commit()

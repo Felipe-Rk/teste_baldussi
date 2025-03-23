@@ -23,7 +23,7 @@ def update_user(user_id, updates):
     cursor = conect.cursor()
     query = "UPDATE users SET"
     query += ", ".join([f"{key} = %s" for key in updates.keys()])
-    values = list(updates.value()) + [user_id]
+    values = list(updates.values()) + [user_id]
     cursor.execute(query, values)
     conect.commit()
     cursor.close()
