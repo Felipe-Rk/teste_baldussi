@@ -11,7 +11,7 @@ def auth_user(email, password):
     conect.close()
 
     if user and check_password_hash(user['senha'], password):
-        return create_access_token(identity = user['id'])
+        return create_access_token(identity = str(user['id']))
     return None
 
 def register_user(user_data):

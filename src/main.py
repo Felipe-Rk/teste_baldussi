@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from src.auth.auth_endpoint import auth_bp  # Importe o Blueprint de autenticação
-
+from src.user.user_endpoint import user_bp
 app = Flask(__name__)
 
 # Configuração do JWT
@@ -10,6 +10,7 @@ jwt = JWTManager(app)
 
 # Registra o Blueprint de autenticação
 app.register_blueprint(auth_bp, url_prefix='/auth')  # Prefixo opcional
+app.register_blueprint(user_bp)
 
 if __name__ == "__main__":
     app.run(debug=True)
