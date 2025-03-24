@@ -1,0 +1,209 @@
+
+🛠️ Pré-Requisitos
+Instalar o Postman:
+
+Certifique-se de que o Postman está instalado. Caso ainda não tenha, faça o download em Postman.
+
+Coleção de Testes:
+
+Importe a coleção Api transcrição - Teste(admin).postman_collection.json no Postman:
+
+Abra o Postman.
+
+Clique em "Import" no canto superior esquerdo.
+
+Arraste ou selecione o arquivo .json.
+
+Configuração do Ambiente:
+
+Certifique-se de que a API está rodando localmente na porta 5000. Caso esteja utilizando outra porta ou endereço, ajuste a URL base na coleção.
+
+Registrar Admin: Cria um usuário admin com dados gerados automaticamente.
+
+Logar Admin: Faz login com o admin registrado e gera um token JWT.
+
+Consultar Usuários: Lista todos os usuários disponíveis.
+
+Atualizar Usuários: Atualiza informações de um usuário específico.
+
+Deletar Usuários: Remove um usuário do sistema.
+
+Enviar Arquivo para Transcrição: Realiza o upload de um arquivo de áudio para transcrição.
+
+Consultar Transcrições:
+
+Lista todas as transcrições realizadas.
+
+Busca uma transcrição específica pelo ID.
+
+Atualizar Transcrições: Altera os detalhes de uma transcrição.
+
+Deletar Transcrições: Remove uma transcrição do sistema.
+
+🚀 Passo-a-Passo para Testar
+1. Registrar Admin
+Abra a requisição Registrar Admin na coleção.
+
+Clique em Send.
+
+O que acontece:
+
+Um CPF, nome, e-mail e outros dados são gerados automaticamente pelos scripts configurados.
+
+O novo admin será registrado no sistema.
+
+Resultado esperado:
+
+Status 201 (Usuário criado com sucesso) ou 409 (E-mail já cadastrado).
+
+Mensagem no corpo da resposta indicando o resultado da operação.
+
+2. Logar Admin
+Abra a requisição Logar Admin.
+
+Clique em Send.
+
+O que acontece:
+
+O e-mail e a senha do admin gerados na etapa anterior são utilizados para autenticar.
+
+O token JWT é gerado automaticamente e salvo na variável global {{token}}.
+
+Resultado esperado:
+
+Status 200.
+
+Corpo da resposta com o token JWT:
+
+json
+{
+  "token": "eyJhbGciOiJIUzI1..."
+}
+3. Consultar Usuários
+Abra a requisição Consultar Users All - Admin.
+
+Verifique que o token JWT está configurado automaticamente no cabeçalho Authorization:
+
+Authorization: Bearer {{token}}
+Clique em Send.
+
+Resultado esperado:
+
+Status 200.
+
+Lista contendo todos os usuários cadastrados no sistema.
+
+4. Atualizar Usuários
+Abra a requisição Atualizar Users.
+
+Substitua o ID do usuário no URL (exemplo: /users/3).
+
+Clique em Send.
+
+Resultado esperado:
+
+Status 200.
+
+Corpo da resposta com os dados atualizados:
+
+json
+{
+  "id": 3,
+  "nome": "User Atualizado",
+  "email": "user.atualizado@example.com"
+}
+5. Deletar Usuários
+Abra a requisição Deletar Users.
+
+Substitua o ID do usuário no URL (exemplo: /users/2).
+
+Clique em Send.
+
+Resultado esperado:
+
+Status 200.
+
+Mensagem de sucesso indicando que o usuário foi removido.
+
+6. Enviar Arquivo para Transcrição
+Abra a requisição API Open - Gerar Transcrição.
+
+Adicione um arquivo de áudio clicando no campo file no corpo da requisição (form-data).
+
+Clique em Send.
+
+Resultado esperado:
+
+Status 200.
+
+Texto transcrito no corpo da resposta.
+
+7. Consultar Transcrições
+7.1 Listar Todas as Transcrições
+Abra a requisição Consultar Todas Transcrições - Admin.
+
+Clique em Send.
+
+Resultado esperado:
+
+Status 200.
+
+Lista de todas as transcrições disponíveis no sistema.
+
+7.2 Buscar Transcrição por ID
+Abra a requisição Consultar Transcrição por ID.
+
+Substitua <id_transcription> no URL pelo ID de uma transcrição existente.
+
+Clique em Send.
+
+Resultado esperado:
+
+Status 200.
+
+Detalhes da transcrição especificada.
+
+8. Atualizar Transcrição
+Abra a requisição Atualizar Transcrição - Admin.
+
+Substitua <id_transcription> no URL pelo ID da transcrição que deseja alterar.
+
+Clique em Send.
+
+Resultado esperado:
+
+Status 200.
+
+Corpo da resposta com os dados atualizados:
+
+json
+{
+  "id": "67e128e73042ea78cacbda69",
+  "transcription": "Texto atualizado.",
+  "status": "revisado"
+}
+9. Deletar Transcrição
+Abra a requisição Deletar Transcrição - Admin.
+
+Substitua <id_transcription> no URL pelo ID da transcrição que deseja remover.
+
+Clique em Send.
+
+Resultado esperado:
+
+Status 200.
+
+Mensagem confirmando a exclusão da transcrição.
+
+💡 Dicas Importantes
+Variáveis Globais:
+
+Os scripts configurados já geram e atualizam automaticamente as variáveis globais no Postman, como cpf, email, token, etc.
+
+Token JWT:
+
+Certifique-se de que o token foi gerado com sucesso na etapa de login. Ele é essencial para as demais requisições protegidas.
+
+IDs Dinâmicos:
+
+Substitua os IDs de usuários ou transcrições conforme necessário nas requisições

@@ -1,49 +1,67 @@
 {
 	"info": {
-		"_postman_id": "9d09f44a-d6f8-48ea-bec6-d022c7db3e1b",
-		"name": "Api transcrição - Teste",
+		"_postman_id": "ea6f2005-30be-48fa-ade6-f8f92b9ead54",
+		"name": "Api transcrição - Teste(admin)",
 		"description": "Contém testes para os endpoints de autenticação, usuários e transcrição.EndFragment",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "42877123"
 	},
 	"item": [
 		{
-			"name": "registrar user",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"cpf\": \"545645454\",\r\n  \"nome\": \"user\",\r\n  \"email\": \"user@example.com\",\r\n  \"senha\": \"senha123\",\r\n  \"role\": \"user\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5000/auth/register",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"auth",
-						"register"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "registrar admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Função para gerar um CPF aleatório (apenas para testes, sem cálculo de dígito verificador)\r",
+							"function gerarCPF() {\r",
+							"    let cpf = \"\";\r",
+							"    for (let i = 0; i < 11; i++) {\r",
+							"        cpf += Math.floor(Math.random() * 10);\r",
+							"    }\r",
+							"    return cpf;\r",
+							"}\r",
+							"\r",
+							"// Função para gerar um nome aleatório\r",
+							"function gerarNome() {\r",
+							"    const nomes = [\"Carlos\", \"Ana\", \"Pedro\", \"Juliana\", \"Fernando\", \"Mariana\"];\r",
+							"    const sobrenomes = [\"Silva\", \"Santos\", \"Oliveira\", \"Lima\", \"Pereira\", \"Costa\"];\r",
+							"    return `${nomes[Math.floor(Math.random() * nomes.length)]} ${sobrenomes[Math.floor(Math.random() * sobrenomes.length)]}`;\r",
+							"}\r",
+							"\r",
+							"// Função para gerar um e-mail aleatório\r",
+							"function gerarEmail() {\r",
+							"    let randomString = Math.random().toString(36).substring(7);\r",
+							"    return `admin_${randomString}@example.com`;\r",
+							"}\r",
+							"\r",
+							"// Gerar dados aleatórios e armazená-los em variáveis globais\r",
+							"pm.globals.set(\"cpf\", gerarCPF());\r",
+							"pm.globals.set(\"nome\", gerarNome());\r",
+							"pm.globals.set(\"email\", gerarEmail());\r",
+							"pm.globals.set(\"senha\", \"senha123\"); // Senha fixa para teste\r",
+							"pm.globals.set(\"role\", \"admin\");\r",
+							"\r",
+							"pm.globals.set(\"admin_email\", pm.globals.get(\"email\"));  // Salva o email do admin gerado\r",
+							"pm.globals.set(\"admin_senha\", pm.globals.get(\"senha\"));  // Senha sempre fixa (ou pode ser aleatória)\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -55,7 +73,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"cpf\": \"545645454\",\r\n  \"nome\": \"admin\",\r\n  \"email\": \"admin@example.com\",\r\n  \"senha\": \"senha123\",\r\n  \"role\": \"admin\"\r\n}",
+					"raw": "{\r\n  \"cpf\": \"{{cpf}}\",\r\n  \"nome\": \"{{nome}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"senha\": \"{{senha}}\",\r\n  \"role\": \"{{role}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -72,47 +90,6 @@
 					"path": [
 						"auth",
 						"register"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "logar user",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					},
-					{
-						"key": "",
-						"value": "",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"email\": \"user@example.com\",\r\n  \"password\": \"senha123\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5000/auth/login",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"auth",
-						"login"
 					]
 				}
 			},
@@ -120,6 +97,27 @@
 		},
 		{
 			"name": "logar admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Token foi gerado\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"token\");\r",
+							"\r",
+							"    // Remove o token antigo (se existir) e salva o novo\r",
+							"    pm.globals.unset(\"token\");\r",
+							"    pm.globals.set(\"token\", jsonData.token);\r",
+							"\r",
+							"    console.log(\"Novo token atualizado:\", jsonData.token);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -137,7 +135,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"senha123\"\r\n}",
+					"raw": "{\r\n  \"email\": \"{{admin_email}}\",\r\n  \"password\": \"{{admin_senha}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -160,7 +158,19 @@
 			"response": []
 		},
 		{
-			"name": "consultar users",
+			"name": "consultar users all - admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -169,7 +179,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer <token>",
+						"value": "Bearer {{token}}",
 						"type": "text"
 					}
 				],
@@ -183,14 +193,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/users",
+					"raw": "http://localhost:5000/users/",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "5000",
 					"path": [
-						"users"
+						"users",
+						""
 					]
 				}
 			},
@@ -203,7 +214,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer <token>",
+						"value": "Bearer {{token}}",
 						"type": "text"
 					}
 				],
@@ -229,7 +240,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer <token>",
+						"value": "Bearer {{token}}",
 						"type": "text"
 					}
 				],
@@ -264,7 +275,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer <token>",
+						"value": "Bearer {{token}}",
 						"type": "text"
 					}
 				],
@@ -314,6 +325,18 @@
 		},
 		{
 			"name": "Consultar todas transcrições - admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -322,7 +345,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer <token>",
+						"value": "Bearer {{token}}",
 						"type": "text"
 					}
 				],
@@ -357,12 +380,12 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer <token>",
+						"value": "Bearer {{token}}",
 						"type": "text"
 					}
 				],
 				"url": {
-					"raw": "http://localhost:5000/transcriptions/<id_transcription>",
+					"raw": "http://localhost:5000/transcriptions/67e128e73042ea78cacbda69",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -370,7 +393,7 @@
 					"port": "5000",
 					"path": [
 						"transcriptions",
-						"<id_transcription>"
+						"67e128e73042ea78cacbda69"
 					]
 				}
 			},
@@ -383,7 +406,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer <token>",
+						"value": "Bearer {{token}}",
 						"type": "text"
 					}
 				],
@@ -416,7 +439,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer <token>",
+						"value": "Bearer {{token}}",
 						"type": "text"
 					}
 				],

@@ -1,185 +1,152 @@
-README do Projeto "API de Transcrição"
+# API de Transcrição
 
-API de Transcrição
-Esta é uma API construída para realizar transcrições de arquivos de áudio. O sistema integra funcionalidades de autenticação, classificação de transcrições, e manipulação de dados utilizando bancos de dados MySQL e MongoDB, além de integrar a API da OpenAI para processamento de transcrições.
+## 📚 Sobre o Projeto
+A **API de Transcrição** é uma aplicação que processa arquivos de áudio para gerar transcrições automáticas e classificá-las tematicamente. Implementada com **Python** e **Flask**, a API utiliza o modelo **OpenAI Whisper** para processamento de áudio e se integra aos bancos de dados **MongoDB** e **MySQL**. Além disso, fornece suporte a autenticação JWT, gestão de usuários e permissões baseadas em roles.
 
-Teste com postman explicados no diretorio src/teste
+Ideal para empresas ou desenvolvedores que precisam de uma solução pronta para transcrição de áudios e classificação de dados, a API prioriza escalabilidade e documentação adequada.
 
-Índice
+---
+
+## 🌐 Documentação Interativa com Swagger
+A API está documentada utilizando o **Swagger**, permitindo a visualização e teste dos endpoints diretamente pelo navegador. Após iniciar o servidor, acesse:
+
+http://127.0.0.1:5000/apidocs/#/
+
+### Funcionalidades do Swagger:
+1. Listagem de todos os endpoints disponíveis.
+2. Teste direto de chamadas HTTP (GET, POST, PUT, DELETE).
+3. Visualização detalhada das entradas e saídas de cada endpoint.
+
+Exemplo de como usar:
+1. Acesse o link acima.
+2. Clique em um endpoint listado.
+3. Veja a descrição, parâmetros esperados e exemplos de respostas.
+4. Execute uma requisição real inserindo os dados nos campos disponíveis.
+
+---
+
+## 🏗️ Arquitetura do Projeto
+
+### Estrutura de Diretórios
+A arquitetura do projeto foi desenhada para separar responsabilidades e facilitar a manutenção e escalabilidade.
+
+```plaintext
+src/
+├── auth/                   # Módulo de autenticação
+│   ├── auth_controller.py  # Controlador de autenticação
+│   ├── auth_service.py     # Lógica de autenticação e autorização
+├── database/               # Configuração dos bancos de dados
+│   ├── mongo/              # Conexão com MongoDB
+│   ├── mysql/              # Conexão com MySQL
+├── models/                 # Modelos de dados
+│   ├── transc_entity.py    # Modelo de transcrição
+│   ├── user_entity.py      # Modelo de usuário
+├── openai/                 # Integração com OpenAI
+│   ├── openai_config.py
+│   ├── openai_service.py
+├── routes/                 # Rotas da API
+├── transcription/          # Lógica para transcrição de áudio
+├── tests/                  # Testes automatizados e arquivos de teste
+├── utils/                  # Utilitários, como funções de permissões
+├── main.py                 # Ponto de entrada do servidor
+├── requirements.txt        # Dependências do projeto
+├── .env                    # Configurações sensíveis do ambiente
+
 Funcionalidades
+1. Autenticação e Autorização
+Autenticação JWT para login seguro.
 
-Tecnologias Utilizadas
+Suporte a roles: admin e user.
 
+Cadastro de novos usuários.
+
+2. Transcrição de Áudio
+Processa arquivos nos formatos .mp3, .wav, .ogg, e outros.
+
+Classificação automática do conteúdo transcrito por categorias como Tecnologia, Saúde, Educação.
+
+3. Gestão de Usuários
+Listagem de usuários (apenas administradores).
+
+Atualização e remoção de usuários.
+
+4. Pesquisa Avançada
+Filtros por palavras-chave e classificação de transcrições.
+
+Paginação para listas grandes.
+
+⚙️ Instalação e Configuração
 Pré-requisitos
+Python (3.8 ou superior)
 
-Configuração
+MongoDB e MySQL
 
-Uso
+Chave de API da OpenAI
 
-Estrutura do Projeto
+Passos para Instalação
 
-Endpoints
-
-Contribuição
-
-Licença
-
-Funcionalidades
-Registro e autenticação de usuários com JWT.
-
-Upload de arquivos de áudio para transcrição.
-
-Classificação das transcrições por categorias pré-definidas.
-
-Consultar, atualizar e deletar transcrições.
-
-Integração com MySQL para gerenciar usuários.
-
-Integração com MongoDB para armazenamento e consulta de transcrições.
-
-Suporte a múltiplos formatos de áudio, incluindo mp3, ogg, wav, entre outros.
-
-Tecnologias Utilizadas
-Linguagem: Python.
-
-Framework Backend: Flask.
-
-Banco de Dados Relacional: MySQL.
-
-Banco de Dados Não-Relacional: MongoDB.
-
-Autenticação: Flask-JWT-Extended.
-
-API de Transcrição: OpenAI (Modelo Whisper-1).
-
-Gerenciamento de Dependências: pip e dotenv.
-
-Pré-requisitos
-Certifique-se de ter as seguintes ferramentas instaladas em sua máquina:
-
-Python 3.10 ou superior.
-
-MySQL Server.
-
-MongoDB.
-
-Conta na OpenAI para utilizar a API.
-
-Editor de código (recomendado: VSCode).
-
-Configuração
-1. Clonar o Repositório
 bash
-git clone https://github.com/usuario/api_transcricao.git
-cd api_transcricao
-2. Configurar Ambiente Virtual
+git clone https://github.com/seu-usuario/api_transcricao.git
+cd api_transcricao/src
+
+Crie um ambiente virtual:
+
 bash
-python3 -m venv venv
-source venv/bin/activate # Linux/Mac
-venv\Scripts\activate # Windows
-3. Instalar Dependências
+python -m venv venv
+source venv/bin/activate  # Linux/MacOS
+venv\Scripts\activate     # Windows
+
+Instale as dependências:
+
 bash
 pip install -r requirements.txt
-4. Configurar Variáveis de Ambiente
-Crie e Edite o arquivo .env com suas chaves e configurações:
 
-OPENAI_API_KEY=sk-CHAVE_UNICA
-JWT_SECRET_KEY=sua_chave_secreta
-5. Configurar Bancos de Dados
-MySQL:
+Configure o arquivo .env: Crie um arquivo .env na pasta src e adicione:
 
-Certifique-se de que o banco user_db está configurado.
-
-As tabelas necessárias serão criadas automaticamente.
-
-MongoDB:
-
-O banco de dados transcricao_db será configurado automaticamente ao iniciar a aplicação.
-
-6. Executar o Servidor
-bash
-python src/main.py
-Uso
-Faça login ou registre-se utilizando os endpoints /auth/login ou /auth/register.
-
-Envie arquivos para transcrição utilizando /transcriptions/transcribe.
-
-Consulte transcrições realizadas em /transcriptions.
-
-Utilize as rotas administrativas para gerenciar usuários ou transcrições.
-
-Estrutura do Projeto
 plaintext
-src/
-├── auth/
-│   ├── auth_controller.py
-│   ├── auth_endpoint.py
-│   └── auth_service.py
-├── database/
-│   ├── mongo/
-│   │   ├── mongo.py
-│   │   └── mongo_config.py
-│   ├── mysql/
-│       ├── mysql.py
-│       └── mysql_config.py
-├── openai/
-│   ├── openai_config.py
-│   └── openai_service.py
-├── transcription/
-│   ├── transc_controller.py
-│   ├── transc_endpoint.py
-│   ├── transc_entity.py
-│   └── transc_service.py
-├── user/
-│   ├── user_controller.py
-│   ├── user_endpoint.py
-│   ├── user_entity.py
-│   └── user_service.py
-├── utils/
-│   └── permissions.py
-└── main.py
+OPENAI_API_KEY=<sua-chave-da-api>
+JWT_SECRET_KEY=super-secreta
+
+Inicie o servidor:
+
+bash
+python main.py
+A API estará disponível em: http://localhost:5000.
+
 Endpoints
 Autenticação
-POST /auth/login: Autenticação de usuários.
+POST /auth/register: Cadastro de usuário.
 
-POST /auth/register: Registro de novos usuários.
+POST /auth/login: Login e obtenção de JWT.
 
-Transcrições
-POST /transcriptions/transcribe: Enviar arquivo de áudio para transcrição.
+Gestão de Usuários
+GET /users: Lista usuários (apenas para admins).
 
-GET /transcriptions: Listar transcrições.
+PUT /users/<user_id>: Atualiza usuário.
 
-GET /transcriptions/<transcription_id>: Detalhar uma transcrição específica.
+DELETE /users/<user_id>: Deleta usuário.
 
-PUT /transcriptions/<transcription_id>: Atualizar uma transcrição (apenas admins).
+Transcrição
+POST /transcriptions/transcribe: Envia um arquivo de áudio para transcrição.
 
-DELETE /transcriptions/<transcription_id>: Remover uma transcrição (apenas admins).
+GET /transcriptions/: Lista todas as transcrições.
 
-GET /transcriptions/search: Pesquisar transcrições por palavra-chave ou classificação.
+GET /transcriptions/<id>: Detalhes de uma transcrição específica.
 
-Usuários (Apenas Admins)
-GET /users: Listar todos os usuários.
+PUT /transcriptions/<id>: Atualiza transcrição.
 
-GET /users/<user_id>: Detalhar um usuário específico.
+DELETE /transcriptions/<id>: Remove uma transcrição.
 
-PUT /users/<user_id>: Atualizar um usuário.
+Testes:
 
-DELETE /users/<user_id>: Deletar um usuário.
+Via Postman
+Importe o arquivo JSON disponível no diretório tests/Api_transcricao-Teste.postman_collection.json.
 
-Contribuição
-Contribuições são bem-vindas! Siga as etapas abaixo para colaborar:
+Configure os tokens e IDs conforme necessário.
 
-Faça um fork do repositório.
+Execute as requisições para validar os endpoints.
 
-Crie uma branch para sua feature (git checkout -b minha-feature).
+instruções de teste - src/tests/readme
 
-Commit suas mudanças (git commit -m 'Minha nova feature').
-
-Faça um push para a branch criada (git push origin minha-feature).
-
-Crie um Pull Request.
-
-Licença
-Este projeto está licenciado sob a Licença MIT. Para mais detalhes, consulte o arquivo LICENSE.
-
-Se precisar de mais alguma informação ou um ajuste, é só avisar! 😊
+📄 Licença
+Este projeto está licenciado sob os termos da licença MIT. Consulte o arquivo LICENSE para mais detalhes.

@@ -1,0 +1,166 @@
+📖 Guia de Testes para a API de Transcrição (User)
+Este guia detalha como utilizar a coleção configurada no Postman para testar os endpoints disponíveis para usuários com perfil de User na API de Transcrição. Os scripts já estão automatizados para geração de dados, autenticação e execução de testes, tornando o processo simples e eficiente.
+
+🛠️ Pré-Requisitos
+Instalar o Postman:
+
+Certifique-se de que o Postman está instalado. Caso contrário, faça o download em Postman.
+
+Coleção de Testes:
+
+Importe a coleção Api transcrição - Teste(user).postman_collection.json no Postman:
+
+Abra o Postman.
+
+Clique em "Import" no canto superior esquerdo.
+
+Arraste ou carregue o arquivo .json.
+
+Configuração do Ambiente:
+
+Certifique-se de que a API está rodando localmente na porta 5000. Caso esteja rodando em outra porta ou endereço, atualize a URL na coleção.
+
+📌 Estrutura da Coleção
+A coleção de testes para User contém os seguintes endpoints:
+
+Registrar User: Cria um usuário com dados predefinidos.
+
+Logar User: Realiza login e gera um token JWT.
+
+Consultar Todos os Usuários: Lista todos os usuários disponíveis (limitado pelo papel de usuário).
+
+Consultar Usuário por ID: Retorna informações detalhadas de um usuário.
+
+Consultar Todas as Transcrições: Lista todas as transcrições disponíveis para o usuário.
+
+🚀 Passo-a-Passo para Testar
+1. Registrar User
+Abra a requisição Registrar User na coleção.
+
+Clique em Send.
+
+O que acontece:
+
+O corpo da requisição já está configurado para registrar um usuário com dados fixos:
+
+json
+{
+  "cpf": "545645454",
+  "nome": "user",
+  "email": "user@example.com",
+  "senha": "senha123",
+  "role": "user"
+}
+Resultado esperado:
+
+Status 201 (Usuário criado com sucesso) ou 409 (E-mail já cadastrado).
+
+Uma mensagem de confirmação será exibida no corpo da resposta:
+
+json
+{
+  "message": "Usuário criado com sucesso."
+}
+2. Logar User
+Abra a requisição Logar User.
+
+Clique em Send.
+
+O que acontece:
+
+O e-mail e a senha configurados no passo anterior são utilizados para autenticar o usuário.
+
+O token JWT gerado será salvo automaticamente na variável global {{token}} por meio do script configurado.
+
+Resultado esperado:
+
+Status 200.
+
+O token JWT será retornado no corpo da resposta:
+
+json
+{
+  "token": "eyJhbGciOiJIUzI1..."
+}
+3. Consultar Todos os Usuários
+Abra a requisição Consultar Users All - User.
+
+Clique em Send.
+
+O que acontece:
+
+A requisição utiliza o token JWT salvo para autenticar a ação.
+
+Resultado esperado:
+
+Status 200.
+
+Lista de usuários será retornada:
+
+json
+[
+  {
+    "id": 1,
+    "nome": "User 1",
+    "email": "user1@example.com",
+    "role": "user"
+  },
+  ...
+]
+4. Consultar Usuário por ID
+Abra a requisição Consultar User ID - User.
+
+Substitua <id> no URL pelo ID de um usuário existente (ex.: /users/1).
+
+Clique em Send.
+
+Resultado esperado:
+
+Status 200.
+
+Detalhes do usuário serão exibidos:
+
+json
+{
+  "id": 1,
+  "nome": "User 1",
+  "email": "user1@example.com",
+  "role": "user"
+}
+5. Consultar Todas as Transcrições
+Abra a requisição Consultar Todas Transcrições - User.
+
+Clique em Send.
+
+O que acontece:
+
+A requisição utiliza o token JWT salvo para acessar a lista de transcrições disponíveis para o usuário.
+
+Resultado esperado:
+
+Status 200.
+
+Lista de transcrições será retornada:
+
+json
+[
+  {
+    "id": "67e128e73042ea78cacbda69",
+    "transcription": "Texto da transcrição...",
+    "status": "pendente",
+    "user_id": "1"
+  },
+  ...
+]
+💡 Dicas Importantes
+Token JWT:
+
+O token gerado no login é armazenado automaticamente na variável global {{token}}. Certifique-se de que ele foi gerado corretamente.
+
+IDs Dinâmicos:
+
+Atualize os IDs nas requisições de acordo com os dados disponíveis no seu banco de dados.
+
+Ambiente Configurado:
+
+Verifique se o endereço da API está correto (por padrão, http://localhost:5000).

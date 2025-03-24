@@ -1,11 +1,11 @@
-from src.database.mysql.mysql_config import setup_mysql_database
+from src.database.mysql.mysql_config import get_mysql_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token
 from mysql.connector import IntegrityError
 from flask import jsonify
 
 def auth_user(email, password):
-    conect = setup_mysql_database()
+    conect = get_mysql_connection()
     cursor = conect.cursor(dictionary = True)
     
     cursor.execute(" SELECT * FROM users WHERE email = %s", (email,))
@@ -18,7 +18,7 @@ def auth_user(email, password):
     return None
 
 def register_user(user_data):
-    conect = setup_mysql_database()
+    conect = get_mysql_connection()
     cursor = conect.cursor(dictionary=True)
 
     # Verifica se já existe um usuário com o mesmo nome ou e-mail

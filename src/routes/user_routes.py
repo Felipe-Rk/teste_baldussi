@@ -33,6 +33,7 @@ user_bp = Blueprint('user', __name__)
         404: {'description': 'Nenhum usuário encontrado'}
     }
 })
+
 def get_all_users_route():
     return get_all_users()
 

@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import jsonify
 from flask_jwt_extended import get_jwt_identity
-from src.database.mysql.mysql_config import setup_mysql_database
+from src.database.mysql.mysql_config import get_mysql_connection
 
 
 def role_required(required_role):
@@ -9,7 +9,7 @@ def role_required(required_role):
         @wraps(f)
         def wrapper(*args, **kwargs):
             user_id = get_jwt_identity()
-            conect = setup_mysql_database()
+            conect = get_mysql_connection()
             cursor = conect.cursor(dictionary = True)
             cursor.execute("SELECT role FROM users WHERE id = %s", (user_id,))
             user = cursor.fetchone()
@@ -26,7 +26,7 @@ def check_if_admin(user_id):
     """
     Verifica se o usuário é um administrador.
     """
-    conect = setup_mysql_database()
+    conect = get_mysql_connection()
     cursor = conect.cursor(dictionary=True)
     cursor.execute("SELECT role FROM users WHERE id = %s", (user_id,))
     user = cursor.fetchone()
