@@ -21,3 +21,16 @@ def role_required(required_role):
             return jsonify({'message': 'Acesso negado!'}), 403
         return wrapper
     return decorator
+
+def check_if_admin(user_id):
+    """
+    Verifica se o usuário é um administrador.
+    """
+    conect = setup_mysql_database()
+    cursor = conect.cursor(dictionary=True)
+    cursor.execute("SELECT role FROM users WHERE id = %s", (user_id,))
+    user = cursor.fetchone()
+    cursor.close()
+    conect.close()
+
+    return user and user['role'] == 'admin'

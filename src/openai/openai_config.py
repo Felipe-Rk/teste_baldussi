@@ -8,14 +8,14 @@ OPENAI_MODEL = "whisper-1"
 
 CLASSIFICATIONS = [
     "Tecnologia",
-    "Saúde",
-    "Educação",
-    "Finanças",
+    "Saude",
+    "Educacao",
+    "Financas",
     "Entretenimento",
     "Esportes",
-    "Negócios",
-    "Ciência",
-    "Política",
+    "Negocios",
+    "Ciencia",
+    "Politica",
     "Outros"
 ]
 

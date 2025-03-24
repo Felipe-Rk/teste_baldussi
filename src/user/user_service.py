@@ -5,12 +5,16 @@ def get_users(page=1, per_page=10):
     cursor = conect.cursor(dictionary=True)
     
     offset = (page - 1) * per_page
+    
+    cursor.execute("SELECT COUNT(*) as total FROM users")
+    total = cursor.fetchone()["total"]
+
     cursor.execute("SELECT * FROM users LIMIT %s OFFSET %s", (per_page, offset))
     users = cursor.fetchall()
     
     cursor.close()
     conect.close()
-    return users
+    return users, total
 
 def get_user_id(user_id):
     conect = setup_mysql_database()
