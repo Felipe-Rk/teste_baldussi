@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
+from flasgger import Swagger
 from .auth_routes import auth_bp
 from .user_routes import user_bp
 from .transc_routes import transcription_bp
@@ -7,6 +8,9 @@ from .transc_routes import transcription_bp
 def create_app():
     app = Flask(__name__)
     app.config["JWT_SECRET_KEY"] = "super-secret"  # Substitua por uma chave segura em produção
+    
+    # Inicializar Swagger
+    swagger = Swagger(app)
 
     # Registro dos blueprints
     app.register_blueprint(auth_bp, url_prefix='/auth')
@@ -15,5 +19,5 @@ def create_app():
 
     # Configuração do JWT
     jwt = JWTManager(app)
-    
+
     return app
