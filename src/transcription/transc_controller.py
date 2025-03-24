@@ -150,3 +150,45 @@ def delete_transcription(transcription_id):
         return jsonify({'message': 'Transcrição não encontrada'}), 404
     
     return jsonify({'message': 'Transcrição deletada com sucesso'}), 200
+
+@jwt_required()
+def search_transcriptions():
+    keyword = request.args.get('keyword')
+    if not keyword:
+        return jsonify({'message': 'Palavra-chave não fornecida'}), 400
+
+    user_id = get_jwt_identity() 
+
+    is_admin = check_if_admin(user_id)
+
+    db = setup_mongo_database()
+    collection = db['transcriptions']
+
+    query = {'transcription': {'$regex': keyword, '$options': 'i'}}
+
+    if not is_admin:
+        query['user_id'] = user_id
+
+    transcriptions = list(collection.find(query))
+
+    if transcriptions == []:
+        return jsonify({'message': 'Transcrição não encontrada'}), 404
+
+    for transcription in transcriptions:
+        transcription['_id'] = str(transcription['_id'])
+
+    return jsonify(transcriptions), 200
+
+#################### COLOCAR FUNÇÃO NO PERMISSIONS E AJUSTAR FUNÇÕES QUE VERIFIQUEM A ROLE
+def check_if_admin(user_id):
+    """
+    Verifica se o usuário é um administrador.
+    """
+    conect = setup_mysql_database()
+    cursor = conect.cursor(dictionary=True)
+    cursor.execute("SELECT role FROM users WHERE id = %s", (user_id,))
+    user = cursor.fetchone()
+    cursor.close()
+    conect.close()
+
+    return user and user['role'] == 'admin'
