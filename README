@@ -3,6 +3,8 @@ README do Projeto "API de Transcrição"
 API de Transcrição
 Esta é uma API construída para realizar transcrições de arquivos de áudio. O sistema integra funcionalidades de autenticação, classificação de transcrições, e manipulação de dados utilizando bancos de dados MySQL e MongoDB, além de integrar a API da OpenAI para processamento de transcrições.
 
+Teste com postman explicados no diretorio src/teste
+
 Índice
 Funcionalidades
 
