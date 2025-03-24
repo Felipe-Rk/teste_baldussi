@@ -3,7 +3,6 @@ from flask_jwt_extended import jwt_required
 from src.openai.openai_service import transcribe_audio
 from src.transcription.transc_service import handle_transcription
 
-# Lista de formatos suportados
 SUPPORTED_FORMATS = ['flac', 'm4a', 'mp3', 'mp4', 'mpeg', 'mpga', 'oga', 'ogg', 'wav', 'webm']
 
 @jwt_required()
@@ -20,7 +19,7 @@ def transcribe():
     if file_extension not in SUPPORTED_FORMATS:
         return jsonify({'message': f'Formato não suportado. Suportados: {SUPPORTED_FORMATS}'}), 400
 
-    file.seek(0)  # 🔴 IMPORTANTE: Garante que o arquivo seja lido corretamente
+    file.seek(0)
 
     result = handle_transcription(file)
 

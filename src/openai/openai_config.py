@@ -1,12 +1,10 @@
-# Chave da API da OpenAI
-import openai
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
-OPENAI_API_KEY = "chave"
-try:
-    models = openai.Model.list()
-    print("Chave da API válida. Modelos disponíveis:", models)
-except Exception as e:
-    print("Erro ao verificar a chave da API:", e)
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_MODEL = "whisper-1"
 
-OPENAI_MODEL = "whisper-1"  # Modelo de transcrição de áudio
+if not OPENAI_API_KEY:
+    raise ValueError("A variável OPENAI_API_KEY não foi definida. Verifique o .env")

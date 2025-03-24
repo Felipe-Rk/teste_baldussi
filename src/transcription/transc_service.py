@@ -8,18 +8,17 @@ def handle_transcription(file):
     :return: Dicionário com o resultado da transcrição ou erro.
     """
     try:
-        # Realiza a transcrição do áudio usando a API da OpenAI
+
         transcription = transcribe_audio(file)
 
         if not transcription:
             return {'error': 'Falha ao transcrever áudio'}
 
-        # Armazena a transcrição no MongoDB
         db = setup_mongo_database()
         collection = db['transcriptions']
         result = collection.insert_one({
             'audio_file': file.filename,
-            'transcription': transcription,  # Certifique-se de que isso não é null
+            'transcription': transcription,
             'status': 'realizada'
         })
 
