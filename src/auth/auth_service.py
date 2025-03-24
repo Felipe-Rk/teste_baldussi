@@ -1,6 +1,8 @@
 from src.database.mysql.mysql_config import setup_mysql_database
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token
+from mysql.connector import IntegrityError
+from flask import jsonify
 
 def auth_user(email, password):
     conect = setup_mysql_database()
@@ -17,16 +19,30 @@ def auth_user(email, password):
 
 def register_user(user_data):
     conect = setup_mysql_database()
-    cursor = conect.cursor()
+    cursor = conect.cursor(dictionary=True)
 
-    hashed_password = generate_password_hash(user_data['senha'], method = 'pbkdf2:sha256')
+    # Verifica se já existe um usuário com o mesmo nome ou e-mail
+    cursor.execute("SELECT * FROM users WHERE nome = %s OR email = %s", (user_data['nome'], user_data['email']))
+    existing_user = cursor.fetchone()
+
+    if existing_user:
+        cursor.close()
+        conect.close()
+        return jsonify({"message": "Nome ou e-mail já estão cadastrados."}), 409  # Código HTTP 409 - Conflito
+
+    hashed_password = generate_password_hash(user_data['senha'], method='pbkdf2:sha256')
     role = user_data.get('role', 'user')
-    
-    cursor.execute(
-        "INSERT INTO users (cpf, nome, email, senha, role) VALUES (%s, %s, %s, %s, %s)",
-        (user_data['cpf'], user_data['nome'], user_data['email'], hashed_password, role)
-    )
-    conect.commit()
-    cursor.close()
-    conect.close()
-    return True
+
+    try:
+        cursor.execute(
+            "INSERT INTO users (cpf, nome, email, senha, role) VALUES (%s, %s, %s, %s, %s)",
+            (user_data['cpf'], user_data['nome'], user_data['email'], hashed_password, role)
+        )
+        conect.commit()
+        return jsonify({"message": "Usuário registrado com sucesso!"}), 201  # Código HTTP 201 - Criado
+    except IntegrityError as e:
+        conect.rollback()
+        return jsonify({"message": "Erro ao registrar usuário: " + str(e)}), 500  # Código HTTP 500 - Erro do servidor
+    finally:
+        cursor.close()
+        conect.close()
