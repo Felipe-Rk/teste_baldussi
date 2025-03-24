@@ -1,10 +1,13 @@
 from src.database.mysql.mysql_config import setup_mysql_database
 
-def get_users():
+def get_users(page=1, per_page=10):
     conect = setup_mysql_database()
-    cursor = conect.cursor(dictionary = True)
-    cursor.execute("SELECT * FROM users")
+    cursor = conect.cursor(dictionary=True)
+    
+    offset = (page - 1) * per_page
+    cursor.execute("SELECT * FROM users LIMIT %s OFFSET %s", (per_page, offset))
     users = cursor.fetchall()
+    
     cursor.close()
     conect.close()
     return users

@@ -1,14 +1,11 @@
+from flask_jwt_extended import get_jwt_identity
 from src.database.mongo.mongo_config import setup_mongo_database
 from src.openai.openai_service import transcribe_audio
 
 def handle_transcription(file):
-    """
-    Função para lidar com a transcrição de áudio.
-    :param file: Arquivo de áudio enviado pelo usuário.
-    :return: Dicionário com o resultado da transcrição ou erro.
-    """
-    try:
 
+    try:
+        user_id = get_jwt_identity()
         transcription = transcribe_audio(file)
 
         if not transcription:
@@ -16,10 +13,12 @@ def handle_transcription(file):
 
         db = setup_mongo_database()
         collection = db['transcriptions']
+        
         result = collection.insert_one({
             'audio_file': file.filename,
             'transcription': transcription,
-            'status': 'realizada'
+            'status': 'realizada',
+            'user_id': user_id
         })
 
         return {

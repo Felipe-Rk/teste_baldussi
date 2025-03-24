@@ -14,5 +14,6 @@ jwt = JWTManager(app)
 app.register_blueprint(auth_bp, url_prefix='/auth') # Prefixo opcional
 app.register_blueprint(user_bp)
 app.register_blueprint(transcription_bp, url_prefix='/transcriptions')
+
 if __name__ == "__main__":
     app.run(debug=True)
